@@ -10,7 +10,7 @@ export default function College() {
 
     const handleCopy = () => {
         if (referralCode) {
-            navigator.clipboard.writeText(referralCode);
+            navigator.clipboard.writeText(import.meta.env.VITE_BACKEND + "/" + referralCode);
             setCopied(true);
             setTimeout(() => setCopied(false), 2000);
         }

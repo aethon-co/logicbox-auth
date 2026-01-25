@@ -11,13 +11,13 @@ const schoolSchema = new mongoose.Schema({
         required: true,
         minlength: 6
     },
-    yearOfGraduation: {
-        type: Number,
-        required: true,
-        minlength: 4
-    },
+    // yearOfGraduation: {
+    //     type: Number,
+    //     required: true,
+    //     min: 2000
+    // },
     phoneNumber: {
-        type: Number,
+        type: String,
         required: true,
         minlength: 10
     },
@@ -34,7 +34,7 @@ const schoolSchema = new mongoose.Schema({
     standard: {
         type: String,
         required: true,
-        minlength: 3
+        minlength: 1
     },
     address: {
         type: String,
@@ -43,8 +43,7 @@ const schoolSchema = new mongoose.Schema({
     },
     referralCode: {
         type: String,
-        required: true,
-        minlength: 3
+        default: 'DIRECT'
     },
     feedbackDetails: {
         type: String,

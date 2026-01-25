@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useMutation } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { signupSchool } from '../api/school';
 
 export default function School() {
     const navigate = useNavigate();
+    const { referralCode: urlReferralCode } = useParams();
     const [formData, setFormData] = useState({
         name: '',
         schoolName: '',
@@ -12,10 +13,17 @@ export default function School() {
         phoneNumber: '',
         standard: '',
         address: '',
-        referralCode: '',
+        referralCode: urlReferralCode || '',
         feedbackDetails: '',
-        yearOfGraduation: 2026
+        // yearOfGraduation: 2026
     });
+
+    // Update state if URL param changes after initial render (edge case, but good practice)
+    useEffect(() => {
+        if (urlReferralCode) {
+            setFormData(prev => ({ ...prev, referralCode: urlReferralCode }));
+        }
+    }, [urlReferralCode]);
 
     const mutation = useMutation({
         mutationFn: signupSchool,

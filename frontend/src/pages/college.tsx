@@ -36,11 +36,21 @@ export default function College() {
         }
     });
 
+    const [emailError, setEmailError] = useState('');
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
+        if (e.target.name === 'email') {
+            setEmailError('');
+        }
     };
 
     const handleSubmit = () => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formData.email)) {
+            setEmailError('Please enter a valid email address');
+            return;
+        }
         mutation.mutate(formData);
     };
 
@@ -67,6 +77,7 @@ export default function College() {
                         type="email"
                         placeholder="Email Address"
                     />
+                    {emailError && <span style={{ color: 'red', fontSize: '0.8rem', marginTop: '-10px' }}>{emailError}</span>}
                     <input
                         className="input-field"
                         name="password"
@@ -125,15 +136,17 @@ export default function College() {
                                 borderRadius: '8px',
                                 display: 'flex',
                                 alignItems: 'center',
-                                justifyContent: 'center',
+                                justifyContent: 'space-between',
                                 gap: '10px',
                                 cursor: 'pointer',
                                 border: copied ? '1px solid #4ade80' : '1px solid var(--primary-color)',
-                                transition: 'all 0.3s ease'
+                                transition: 'all 0.3s ease',
+                                overflowX: 'auto',
+                                whiteSpace: 'nowrap'
                             }}
                         >
-                            <span style={{ fontSize: '1.5rem', fontFamily: 'monospace' }}>{referralCode}</span>
-                            <span style={{ fontSize: '1.2rem' }}>{copied ? '✅' : '📋'}</span>
+                            <span style={{ fontSize: '1rem', fontFamily: 'monospace' }}>{import.meta.env.VITE_BACKEND + "/" + referralCode}</span>
+                            <span style={{ fontSize: '1.2rem', flexShrink: 0 }}>{copied ? '✅' : '📋'}</span>
                         </div>
                         {copied && <p style={{ color: '#4ade80', marginTop: '0.5rem', fontSize: '0.9rem' }}>Copied to clipboard!</p>}
                     </div>

@@ -9,7 +9,7 @@ const queryClient = new QueryClient()
 
 const router = createBrowserRouter([
   {
-    path: "/school",
+    path: "/school/:referralCode?",
     element: <School />,
   },
   {

@@ -1,16 +1,144 @@
+import { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
+import { signupCollege } from '../api/college';
+
 export default function College() {
+    const navigate = useNavigate();
+    const [referralCode, setReferralCode] = useState<string | null>(null);
+    const [copied, setCopied] = useState(false);
+
+    const handleCopy = () => {
+        if (referralCode) {
+            navigator.clipboard.writeText(referralCode);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        }
+    };
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        password: '',
+        collegeName: '',
+        yearOfGraduation: '',
+        phoneNumber: '',
+    });
+
+    const mutation = useMutation({
+        mutationFn: signupCollege,
+        onSuccess: (data) => {
+            console.log("Signup successful:", data);
+            setReferralCode(data.user.referralCode);
+        },
+        onError: (error: any) => {
+            console.error("Signup failed:", error);
+            alert(`Signup Failed: ${error.message}`);
+        }
+    });
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleSubmit = () => {
+        mutation.mutate(formData);
+    };
+
+
+
     return (
-        <>
-            <h1>Participant Registration</h1>
-            <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                <input type="text" placeholder="Enter your name" />
-                <input type="email" placeholder="Enter your email" />
-                <input type="text" placeholder="Enter your password" />
-                <input type="text" placeholder="Enter your college name" />
-                <input type="number" placeholder="Enter your year of graduation" />
-                <input type="number" placeholder="Enter your phone number" />
+        <div className="container">
+            <div className="card">
+                <h1>College Registration</h1>
+                <div className="form-group">
+                    <input
+                        className="input-field"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        type="text"
+                        placeholder="Full Name"
+                    />
+                    <input
+                        className="input-field"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        type="email"
+                        placeholder="Email Address"
+                    />
+                    <input
+                        className="input-field"
+                        name="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        type="password"
+                        placeholder="Password"
+                    />
+                    <input
+                        className="input-field"
+                        name="collegeName"
+                        value={formData.collegeName}
+                        onChange={handleChange}
+                        type="text"
+                        placeholder="College Name"
+                    />
+                    <input
+                        className="input-field"
+                        name="yearOfGraduation"
+                        value={formData.yearOfGraduation}
+                        onChange={handleChange}
+                        type="number"
+                        placeholder="Year of Graduation"
+                    />
+                    <input
+                        className="input-field"
+                        name="phoneNumber"
+                        value={formData.phoneNumber}
+                        onChange={handleChange}
+                        type="number"
+                        placeholder="Phone Number"
+                    />
+                </div>
+                <button
+                    className="btn-primary"
+                    onClick={handleSubmit}
+                    disabled={mutation.isPending}
+                >
+                    {mutation.isPending ? "Submitting..." : "Submit Registration"}
+                </button>
+                <button
+                    className="btn-secondary"
+                    onClick={() => navigate("/school")}
+                >
+                    Go to School Registration
+                </button>
+                {referralCode && (
+                    <div style={{ marginTop: '2rem', textAlign: 'center' }}>
+                        <h3 style={{ color: '#646cff' }}>Registration Successful!</h3>
+                        <p style={{ marginBottom: '0.5rem' }}>Your Referral Code (Click to copy):</p>
+                        <div
+                            onClick={handleCopy}
+                            style={{
+                                background: 'rgba(255, 255, 255, 0.1)',
+                                padding: '1rem',
+                                borderRadius: '8px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '10px',
+                                cursor: 'pointer',
+                                border: copied ? '1px solid #4ade80' : '1px solid var(--primary-color)',
+                                transition: 'all 0.3s ease'
+                            }}
+                        >
+                            <span style={{ fontSize: '1.5rem', fontFamily: 'monospace' }}>{referralCode}</span>
+                            <span style={{ fontSize: '1.2rem' }}>{copied ? '✅' : '📋'}</span>
+                        </div>
+                        {copied && <p style={{ color: '#4ade80', marginTop: '0.5rem', fontSize: '0.9rem' }}>Copied to clipboard!</p>}
+                    </div>
+                )}
             </div>
-            <button onClick={() => console.log("Submitted")} style={{ marginTop: "10px" }}>Submit</button>
-        </>
+        </div>
     )
 }

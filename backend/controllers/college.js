@@ -4,7 +4,7 @@ const College = require("../models/college");
 
 const signup = async (req, res) => {
     try {
-        const { name, password, yearOfGraduation, phoneNumber, email, collegeName, referralCode } = req.body;
+        const { name, password, yearOfGraduation, phoneNumber, email, collegeName } = req.body;
 
         const existingUser = await College.findOne({ email });
         if (existingUser) {
@@ -12,6 +12,7 @@ const signup = async (req, res) => {
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
+        const referralCode = Math.random().toString(36).substring(2, 12).toUpperCase();
 
         const newCollege = new College({
             name,

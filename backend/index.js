@@ -1,6 +1,6 @@
 const express = require("express")
 require("dotenv").config()
-const dbConnect = require("./DB/dbConnect")
+const dbConnect = require("./db/dbConnect")
 const collegeRouter = require("./routes/college")
 const schoolRouter = require("./routes/school")
 const adminRouter = require("./routes/admin")

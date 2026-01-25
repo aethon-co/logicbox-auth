@@ -8,11 +8,12 @@ const cors = require("cors")
 const app = express()
 
 app.use(express.json())
-app.use(cors({
-    origin: [
-        process.env.ORIGIN
-    ],
-}));
+// app.use(cors({
+//     origin: [
+//         process.env.ORIGIN
+//     ],
+// }));
+app.use(cors())
 
 app.use("/api/v1/college", collegeRouter)
 app.use("/api/v1/school", schoolRouter)

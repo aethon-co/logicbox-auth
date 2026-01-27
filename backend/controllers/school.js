@@ -22,7 +22,8 @@ const signup = async (req, res) => {
             standard,
             address,
             referralCode,
-            feedbackDetails
+            feedbackDetails,
+            isEnabled: true
         });
 
         await newSchool.save();

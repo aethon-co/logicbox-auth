@@ -71,8 +71,22 @@ const getCollegeById = async (req, res) => {
     }
 };
 
+const deleteStudent = async (req, res) => {
+    try {
+        const student = await School.findById(req.params.id);
+        if (!student) {
+            return res.status(404).json({ message: "Student not found" });
+        }
+        student.isActive = false;
+        await student.save();
+        res.status(200).json({ message: "Student deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ message: "Error deleting student", error: error.message });
+    }
+}
 module.exports = {
     signup,
     login,
-    getCollegeById
+    getCollegeById,
+    deleteStudent
 };

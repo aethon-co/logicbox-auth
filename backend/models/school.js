@@ -48,6 +48,10 @@ const schoolSchema = new mongoose.Schema({
     feedbackDetails: {
         type: String,
         minlength: 3
+    },
+    isEnabled: {
+        type: Boolean,
+        default: true
     }
 })
 

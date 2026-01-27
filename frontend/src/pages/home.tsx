@@ -9,6 +9,7 @@ const Dashboard = () => {
     const token = localStorage.getItem("token");
 
     const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+    const [copied, setCopied] = useState(false);
 
     useEffect(() => {
         const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -26,11 +27,22 @@ const Dashboard = () => {
         return <Navigate to="/login" replace />;
     }
 
+    const { collegeUser, referrals = [] } = data || {};
+
     const handleLogout = () => {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
         queryClient.clear();
         navigate("/login");
+    };
+
+    const handleCopyLink = () => {
+        if (collegeUser?.referralCode) {
+            const fullLink = `${window.location.origin}/school/${collegeUser.referralCode}`;
+            navigator.clipboard.writeText(fullLink);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        }
     };
 
     const handleVideoUpload = (e: React.ChangeEvent<HTMLInputElement>, studentName: string) => {
@@ -42,7 +54,7 @@ const Dashboard = () => {
 
     const styles = {
         container: {
-            padding: isMobile ? "20px 16px 100px 16px" : "40px 60px",
+            padding: isMobile ? "20px 16px 120px 16px" : "40px 60px",
             backgroundColor: "#020617",
             minHeight: "100vh",
             fontFamily: "'Plus Jakarta Sans', sans-serif",
@@ -53,7 +65,19 @@ const Dashboard = () => {
             flexDirection: "row" as const,
             justifyContent: "space-between",
             alignItems: "center",
-            marginBottom: isMobile ? "30px" : "50px"
+            marginBottom: isMobile ? "24px" : "40px"
+        },
+        referralCard: {
+            background: "rgba(99, 102, 241, 0.1)",
+            border: "1px solid rgba(99, 102, 241, 0.2)",
+            borderRadius: "16px",
+            padding: "16px 20px",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "32px",
+            cursor: "pointer",
+            transition: "all 0.2s"
         },
         logoutBtn: {
             padding: "12px 24px",
@@ -147,11 +171,7 @@ const Dashboard = () => {
     };
 
     if (isLoading) return <div style={styles.loader}>Loading...</div>;
-
-    // Fixed red lines by typing error as any
     if (error) return <div style={styles.loader}>Error: {(error as any).message}</div>;
-
-    const { collegeUser, referrals = [] } = data || {};
 
     return (
         <div style={styles.container}>
@@ -167,6 +187,24 @@ const Dashboard = () => {
                 )}
             </div>
 
+            {/* Referral Link Section */}
+            <div
+                style={styles.referralCard as any}
+                onClick={handleCopyLink}
+                onMouseOver={(e) => (e.currentTarget.style.borderColor = "rgba(99, 102, 241, 0.5)")}
+                onMouseOut={(e) => (e.currentTarget.style.borderColor = "rgba(99, 102, 241, 0.2)")}
+            >
+                <div>
+                    <p style={{ margin: 0, fontSize: "0.75rem", color: "#6366f1", fontWeight: 700, textTransform: "uppercase" }}>Your Referral Link</p>
+                    <p style={{ margin: "4px 0 0 0", fontSize: isMobile ? "0.85rem" : "1rem", color: "#f8fafc", opacity: 0.8 }}>
+                        {window.location.origin}/school/{collegeUser?.referralCode}
+                    </p>
+                </div>
+                <div style={{ backgroundColor: copied ? "#10b981" : "#6366f1", color: "white", padding: "8px 16px", borderRadius: "8px", fontSize: "0.8rem", fontWeight: 600 }}>
+                    {copied ? "Copied!" : "Copy"}
+                </div>
+            </div>
+
             <div style={styles.statsContainer}>
                 <div style={styles.card}>
                     <p style={{ color: "#64748b", margin: "0 0 8px 0", fontSize: "0.75rem", fontWeight: "600" }}>REPRESENTATIVE</p>
@@ -174,7 +212,7 @@ const Dashboard = () => {
                 </div>
                 <div style={styles.card}>
                     <p style={{ color: "#64748b", margin: "0 0 8px 0", fontSize: "0.75rem", fontWeight: "600" }}>INSTITUTION</p>
-                    <h2 style={{ margin: 0, fontSize: "1.4rem" }}>{collegeUser?.collegeName}</h2>
+                    <h2 style={{ margin: 0, fontSize: "1.4rem", color: "#6366f1" }}>{collegeUser?.collegeName}</h2>
                 </div>
                 <div style={styles.card}>
                     <p style={{ color: "#64748b", margin: "0 0 8px 0", fontSize: "0.75rem", fontWeight: "600" }}>TOTAL REFERRALS</p>
@@ -226,7 +264,7 @@ const Dashboard = () => {
                                 <tr key={student._id}>
                                     <td style={styles.td}><div style={{ fontWeight: "600" }}>{student.name}</div></td>
                                     <td style={styles.td}>{student.schoolName}</td>
-                                    <td style={styles.td}>{student.standard}</td>
+                                    <td style={styles.td}><span style={styles.badge}>{student.standard}</span></td>
                                     <td style={styles.td}>
                                         <input
                                             type="file"

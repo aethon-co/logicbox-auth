@@ -21,6 +21,7 @@ export default function College() {
         mutationFn: signupCollege,
         onSuccess: (data) => {
             setReferralCode(data.user.referralCode);
+            navigate('/home');
         },
         onError: (error: any) => {
             alert(`Signup Failed: ${error.message}`);
@@ -29,7 +30,7 @@ export default function College() {
 
     const handleCopy = () => {
         if (referralCode) {
-            navigator.clipboard.writeText(`${import.meta.env.VITE_BACKEND}/${referralCode}`);
+            navigator.clipboard.writeText(`${import.meta.env.VITE_FRONTEND}/register/${referralCode}`);
             setCopied(true);
             setTimeout(() => setCopied(false), 2000);
         }

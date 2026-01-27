@@ -12,5 +12,11 @@ export const signupSchool = async (data: any) => {
         throw new Error(errorData.message || "Failed to signup");
     }
 
-    return response.json();
+    const result = await response.json();
+    if (result.token) {
+        localStorage.setItem("token", result.token);
+    }
+    localStorage.setItem("user", JSON.stringify(result.user));
+
+    return result;
 };

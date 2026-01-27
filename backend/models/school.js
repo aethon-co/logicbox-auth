@@ -47,7 +47,6 @@ const schoolSchema = new mongoose.Schema({
     },
     feedbackDetails: {
         type: String,
-        required: true,
         minlength: 3
     }
 })

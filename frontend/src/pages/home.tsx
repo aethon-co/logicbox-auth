@@ -174,7 +174,7 @@ const Dashboard = () => {
                 </div>
                 <div style={styles.card}>
                     <p style={{ color: "#64748b", margin: "0 0 8px 0", fontSize: "0.75rem", fontWeight: "600" }}>INSTITUTION</p>
-                    <h2 style={{ margin: 0, fontSize: "1.4rem", color: "#6366f1" }}>{collegeUser?.collegeName}</h2>
+                    <h2 style={{ margin: 0, fontSize: "1.4rem" }}>{collegeUser?.collegeName}</h2>
                 </div>
                 <div style={styles.card}>
                     <p style={{ color: "#64748b", margin: "0 0 8px 0", fontSize: "0.75rem", fontWeight: "600" }}>TOTAL REFERRALS</p>

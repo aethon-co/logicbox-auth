@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const College = require("../models/college");
+const School = require("../models/school")
 
 const signup = async (req, res) => {
     try {

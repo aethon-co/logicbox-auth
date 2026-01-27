@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { getMe } from "../api/me";
+import { deleteStudent } from "../api/delete";
 
 const Dashboard = () => {
     const navigate = useNavigate();
@@ -29,6 +30,8 @@ const Dashboard = () => {
 
     const { collegeUser, referrals = [] } = data || {};
 
+    const enabledReferrals = referrals.filter((student: any) => student.isEnabled === true);
+
     const handleLogout = () => {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
@@ -49,6 +52,19 @@ const Dashboard = () => {
         const file = e.target.files?.[0];
         if (file) {
             alert(`Uploading video for ${studentName}: ${file.name}`);
+        }
+    };
+
+    const mutation = useMutation({
+        mutationFn: deleteStudent,
+    });
+
+    const handleDeleteStudent = async (studentId: string) => {
+        try {
+            await mutation.mutateAsync(studentId);
+            await queryClient.invalidateQueries({ queryKey: ["userMe"] });
+        } catch (error) {
+            console.error(error);
         }
     };
 
@@ -137,6 +153,11 @@ const Dashboard = () => {
             flexDirection: "column" as const,
             gap: "12px"
         },
+        actionGroup: {
+            display: "flex",
+            alignItems: "center",
+            gap: "12px"
+        },
         uploadLabel: {
             backgroundColor: "#6366f1",
             color: "white",
@@ -148,7 +169,18 @@ const Dashboard = () => {
             display: "inline-flex",
             alignItems: "center",
             justifyContent: "center",
-            gap: "8px"
+            border: "none"
+        },
+        deleteBtn: {
+            backgroundColor: "rgba(239, 68, 68, 0.1)",
+            color: "#ef4444",
+            padding: "10px 18px",
+            borderRadius: "10px",
+            cursor: "pointer",
+            border: "1px solid rgba(239, 68, 68, 0.2)",
+            fontSize: "0.85rem",
+            fontWeight: "600",
+            transition: "all 0.2s"
         },
         badge: {
             backgroundColor: "rgba(56, 189, 248, 0.1)",
@@ -187,7 +219,6 @@ const Dashboard = () => {
                 )}
             </div>
 
-            {/* Referral Link Section */}
             <div
                 style={styles.referralCard as any}
                 onClick={handleCopyLink}
@@ -216,7 +247,7 @@ const Dashboard = () => {
                 </div>
                 <div style={styles.card}>
                     <p style={{ color: "#64748b", margin: "0 0 8px 0", fontSize: "0.75rem", fontWeight: "600" }}>TOTAL REFERRALS</p>
-                    <h2 style={{ margin: 0, fontSize: "1.4rem" }}>{referrals.length}</h2>
+                    <h2 style={{ margin: 0, fontSize: "1.4rem" }}>{enabledReferrals.length}</h2>
                 </div>
             </div>
 
@@ -227,7 +258,7 @@ const Dashboard = () => {
 
                 {isMobile ? (
                     <div>
-                        {referrals.map((student: any) => (
+                        {enabledReferrals.map((student: any) => (
                             <div key={student._id} style={styles.mobileRow}>
                                 <div style={{ display: "flex", justifyContent: "space-between" }}>
                                     <div>
@@ -236,16 +267,24 @@ const Dashboard = () => {
                                     </div>
                                     <span style={styles.badge}>{student.standard}</span>
                                 </div>
-                                <input
-                                    type="file"
-                                    accept="video/*"
-                                    id={`upload-mob-${student._id}`}
-                                    style={{ display: "none" }}
-                                    onChange={(e) => handleVideoUpload(e, student.name)}
-                                />
-                                <label htmlFor={`upload-mob-${student._id}`} style={styles.uploadLabel}>
-                                    Upload Video
-                                </label>
+                                <div style={styles.actionGroup}>
+                                    <input
+                                        type="file"
+                                        accept="video/*"
+                                        id={`upload-mob-${student._id}`}
+                                        style={{ display: "none" }}
+                                        onChange={(e) => handleVideoUpload(e, student.name)}
+                                    />
+                                    <label htmlFor={`upload-mob-${student._id}`} style={{ ...styles.uploadLabel, flex: 1 }}>
+                                        Upload Video
+                                    </label>
+                                    <button
+                                        onClick={() => handleDeleteStudent(student._id)}
+                                        style={styles.deleteBtn}
+                                    >
+                                        Delete
+                                    </button>
+                                </div>
                             </div>
                         ))}
                     </div>
@@ -256,24 +295,36 @@ const Dashboard = () => {
                                 <th style={styles.th}>Full Name</th>
                                 <th style={styles.th}>School / College</th>
                                 <th style={styles.th}>Grade</th>
-                                <th style={styles.th}>Action</th>
+                                <th style={styles.th}>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {referrals.map((student: any) => (
+                            {enabledReferrals.map((student: any) => (
                                 <tr key={student._id}>
                                     <td style={styles.td}><div style={{ fontWeight: "600" }}>{student.name}</div></td>
                                     <td style={styles.td}>{student.schoolName}</td>
-                                    <td style={styles.td}><span style={styles.badge}>{student.standard}</span></td>
+                                    <td style={styles.td}>{student.standard}</td>
                                     <td style={styles.td}>
-                                        <input
-                                            type="file"
-                                            accept="video/*"
-                                            id={`upload-${student._id}`}
-                                            style={{ display: "none" }}
-                                            onChange={(e) => handleVideoUpload(e, student.name)}
-                                        />
-                                        <label htmlFor={`upload-${student._id}`} style={styles.uploadLabel}>Upload Video</label>
+                                        <div style={styles.actionGroup}>
+                                            <input
+                                                type="file"
+                                                accept="video/*"
+                                                id={`upload-${student._id}`}
+                                                style={{ display: "none" }}
+                                                onChange={(e) => handleVideoUpload(e, student.name)}
+                                            />
+                                            <label htmlFor={`upload-${student._id}`} style={styles.uploadLabel}>
+                                                Upload Video
+                                            </label>
+                                            <button
+                                                onClick={() => handleDeleteStudent(student._id)}
+                                                style={styles.deleteBtn}
+                                                onMouseOver={(e) => e.currentTarget.style.backgroundColor = "rgba(239, 68, 68, 0.2)"}
+                                                onMouseOut={(e) => e.currentTarget.style.backgroundColor = "rgba(239, 68, 68, 0.1)"}
+                                            >
+                                                Delete
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             ))}

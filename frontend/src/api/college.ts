@@ -14,3 +14,4 @@ export const signupCollege = async (data: any) => {
 
     return response.json();
 };
+

@@ -7,14 +7,7 @@ export default function College() {
     const navigate = useNavigate();
     const [referralCode, setReferralCode] = useState<string | null>(null);
     const [copied, setCopied] = useState(false);
-
-    const handleCopy = () => {
-        if (referralCode) {
-            navigator.clipboard.writeText(import.meta.env.VITE_BACKEND + "/" + referralCode);
-            setCopied(true);
-            setTimeout(() => setCopied(false), 2000);
-        }
-    };
+    const [emailError, setEmailError] = useState('');
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -27,22 +20,24 @@ export default function College() {
     const mutation = useMutation({
         mutationFn: signupCollege,
         onSuccess: (data) => {
-            console.log("Signup successful:", data);
             setReferralCode(data.user.referralCode);
         },
         onError: (error: any) => {
-            console.error("Signup failed:", error);
             alert(`Signup Failed: ${error.message}`);
         }
     });
 
-    const [emailError, setEmailError] = useState('');
+    const handleCopy = () => {
+        if (referralCode) {
+            navigator.clipboard.writeText(`${import.meta.env.VITE_BACKEND}/${referralCode}`);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        }
+    };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
-        if (e.target.name === 'email') {
-            setEmailError('');
-        }
+        if (e.target.name === 'email') setEmailError('');
     };
 
     const handleSubmit = () => {
@@ -54,104 +49,190 @@ export default function College() {
         mutation.mutate(formData);
     };
 
-
+    const styles = {
+        wrapper: {
+            minHeight: '100vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#020617',
+            padding: '20px',
+            fontFamily: "'Plus Jakarta Sans', sans-serif"
+        },
+        card: {
+            width: '100%',
+            maxWidth: '500px',
+            backgroundColor: '#0f172a',
+            padding: '40px',
+            borderRadius: '24px',
+            border: '1px solid #1e293b',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
+        },
+        title: {
+            color: '#f8fafc',
+            fontSize: '1.875rem',
+            fontWeight: '700',
+            textAlign: 'center',
+            marginBottom: '8px'
+        },
+        subtitle: {
+            color: '#94a3b8',
+            textAlign: 'center',
+            marginBottom: '32px',
+            fontSize: '0.95rem'
+        },
+        inputGroup: {
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '16px',
+            marginBottom: '24px'
+        },
+        input: {
+            width: '100%',
+            backgroundColor: '#1e293b',
+            border: '1px solid #334155',
+            borderRadius: '12px',
+            padding: '14px 16px',
+            color: '#f8fafc',
+            fontSize: '1rem',
+            outline: 'none',
+            boxSizing: 'border-box',
+            transition: 'border-color 0.2s'
+        },
+        buttonPrimary: {
+            width: '100%',
+            backgroundColor: '#6366f1',
+            color: 'white',
+            padding: '14px',
+            borderRadius: '12px',
+            fontWeight: '600',
+            fontSize: '1rem',
+            border: 'none',
+            cursor: 'pointer',
+            marginBottom: '12px',
+            transition: 'opacity 0.2s'
+        },
+        footerText: {
+            textAlign: 'center',
+            color: '#94a3b8',
+            fontSize: '0.9rem',
+            marginTop: '20px'
+        },
+        link: {
+            color: '#6366f1',
+            cursor: 'pointer',
+            fontWeight: '600',
+            marginLeft: '5px'
+        },
+        successBox: {
+            marginTop: '24px',
+            padding: '20px',
+            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+            border: '1px solid rgba(16, 185, 129, 0.2)',
+            borderRadius: '16px',
+            textAlign: 'center'
+        },
+        copyArea: {
+            backgroundColor: '#020617',
+            padding: '12px',
+            borderRadius: '10px',
+            marginTop: '12px',
+            cursor: 'pointer',
+            border: '1px solid #334155',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+        }
+    };
 
     return (
-        <div className="container">
-            <div className="card">
-                <h1>College Registration</h1>
-                <div className="form-group">
+        <div style={styles.wrapper as any}>
+            <div style={styles.card as any}>
+                <h1 style={styles.title as any}>College Registration</h1>
+                <p style={styles.subtitle as any}>Partner with us to empower your students</p>
+
+                <div style={styles.inputGroup as any}>
                     <input
-                        className="input-field"
+                        style={styles.input as any}
                         name="name"
                         value={formData.name}
                         onChange={handleChange}
-                        type="text"
                         placeholder="Full Name"
                     />
+                    <div>
+                        <input
+                            style={{ ...styles.input, borderColor: emailError ? '#ef4444' : '#334155' } as any}
+                            name="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            type="email"
+                            placeholder="Email Address"
+                        />
+                        {emailError && <span style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '4px', display: 'block' }}>{emailError}</span>}
+                    </div>
                     <input
-                        className="input-field"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        type="email"
-                        placeholder="Email Address"
-                    />
-                    {emailError && <span style={{ color: 'red', fontSize: '0.8rem', marginTop: '-10px' }}>{emailError}</span>}
-                    <input
-                        className="input-field"
+                        style={styles.input as any}
                         name="password"
                         value={formData.password}
                         onChange={handleChange}
                         type="password"
-                        placeholder="Password"
+                        placeholder="Create Password"
                     />
                     <input
-                        className="input-field"
+                        style={styles.input as any}
                         name="collegeName"
                         value={formData.collegeName}
                         onChange={handleChange}
-                        type="text"
                         placeholder="College Name"
                     />
-                    <input
-                        className="input-field"
-                        name="yearOfGraduation"
-                        value={formData.yearOfGraduation}
-                        onChange={handleChange}
-                        type="number"
-                        placeholder="Year of Graduation"
-                    />
-                    <input
-                        className="input-field"
-                        name="phoneNumber"
-                        value={formData.phoneNumber}
-                        onChange={handleChange}
-                        type="number"
-                        placeholder="Phone Number"
-                    />
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                        <input
+                            style={styles.input as any}
+                            name="yearOfGraduation"
+                            value={formData.yearOfGraduation}
+                            onChange={handleChange}
+                            type="number"
+                            placeholder="Grad. Year"
+                        />
+                        <input
+                            style={styles.input as any}
+                            name="phoneNumber"
+                            value={formData.phoneNumber}
+                            onChange={handleChange}
+                            type="number"
+                            placeholder="Phone Number"
+                        />
+                    </div>
                 </div>
+
                 <button
-                    className="btn-primary"
+                    style={{ ...styles.buttonPrimary, opacity: mutation.isPending ? 0.7 : 1 } as any}
                     onClick={handleSubmit}
                     disabled={mutation.isPending}
                 >
-                    {mutation.isPending ? "Submitting..." : "Submit Registration"}
+                    {mutation.isPending ? "Registering..." : "Create Account"}
                 </button>
-                <button
-                    className="btn-secondary"
-                    onClick={() => navigate("/school")}
-                >
-                    Go to School Registration
-                </button>
+
+                <div style={styles.footerText as any}>
+                    Already have an account?
+                    <span style={styles.link as any} onClick={() => navigate("/login")}>Login</span>
+                </div>
+
+                <div style={{ ...styles.footerText, marginTop: '10px' } as any}>
+                    Registering for a school?
+                    <span style={styles.link as any} onClick={() => navigate("/school")}>Click here</span>
+                </div>
+
                 {referralCode && (
-                    <div style={{ marginTop: '2rem', textAlign: 'center' }}>
-                        <h3 style={{ color: '#646cff' }}>Registration Successful!</h3>
-                        <p style={{ marginBottom: '0.5rem' }}>Your Referral Code (Click to copy):</p>
-                        <div
-                            onClick={handleCopy}
-                            style={{
-                                background: 'rgba(255, 255, 255, 0.1)',
-                                padding: '1rem',
-                                borderRadius: '8px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'space-between',
-                                gap: '10px',
-                                cursor: 'pointer',
-                                border: copied ? '1px solid #4ade80' : '1px solid var(--primary-color)',
-                                transition: 'all 0.3s ease',
-                                overflowX: 'auto',
-                                whiteSpace: 'nowrap'
-                            }}
-                        >
-                            <span style={{ fontSize: '1rem', fontFamily: 'monospace' }}>{import.meta.env.VITE_BACKEND + "/" + referralCode}</span>
-                            <span style={{ fontSize: '1.2rem', flexShrink: 0 }}>{copied ? '✅' : '📋'}</span>
+                    <div style={styles.successBox as any}>
+                        <h4 style={{ color: '#10b981', margin: '0 0 8px 0', fontSize: '1rem' }}>Success! Account Created</h4>
+                        <div style={styles.copyArea as any} onClick={handleCopy}>
+                            <span style={{ fontSize: '0.85rem', color: '#6366f1' }}>{referralCode}</span>
+                            <span>{copied ? '✅' : '📋'}</span>
                         </div>
-                        {copied && <p style={{ color: '#4ade80', marginTop: '0.5rem', fontSize: '0.9rem' }}>Copied to clipboard!</p>}
                     </div>
                 )}
             </div>
         </div>
-    )
+    );
 }

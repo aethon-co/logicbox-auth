@@ -5,6 +5,8 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import School from './pages/school.tsx'
 import College from './pages/college.tsx'
+import Login from './pages/login.tsx'
+import Home from './pages/home.tsx'
 const queryClient = new QueryClient()
 
 const router = createBrowserRouter([
@@ -15,6 +17,14 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <College />,
+  },
+  {
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/home",
+    element: <Home />,
   }
 ])
 

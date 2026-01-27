@@ -8,7 +8,7 @@ const signup = async (req, res) => {
 
         const existingUser = await College.findOne({ email });
         if (existingUser) {
-            return res.status(400).json({ message: "User already exists" });
+            return res.status(400).json({ message: "" });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -55,14 +55,16 @@ const login = async (req, res) => {
         res.status(500).json({ message: "Error logging in", error: error.message });
     }
 };
-
 const getCollegeById = async (req, res) => {
     try {
         const collegeUser = await College.findById(req.params.id);
         if (!collegeUser) {
             return res.status(404).json({ message: "User not found" });
         }
-        res.status(200).json(collegeUser);
+        const referral = collegeUser.referralCode;
+        const referrals = await School.find({ referralCode: referral });
+
+        res.status(200).json({ collegeUser, referrals });
     } catch (error) {
         res.status(500).json({ message: "Error fetching user", error: error.message });
     }

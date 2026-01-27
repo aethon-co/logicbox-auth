@@ -77,7 +77,7 @@ const deleteStudent = async (req, res) => {
         if (!student) {
             return res.status(404).json({ message: "Student not found" });
         }
-        student.isActive = false;
+        student.isEnabled = false;
         await student.save();
         res.status(200).json({ message: "Student deleted successfully" });
     } catch (error) {

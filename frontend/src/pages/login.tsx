@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { loginCollege } from '../api/login';
+import toast from 'react-hot-toast';
 
 export default function Login() {
     const navigate = useNavigate();
@@ -16,10 +17,11 @@ export default function Login() {
         onSuccess: (data) => {
             localStorage.setItem("token", data.token);
             localStorage.setItem("user", JSON.stringify(data.user));
+            toast.success("Login successful");
             navigate("/home");
         },
         onError: (error: any) => {
-            alert(`Login Failed: ${error.message}`);
+            toast.error(error.message || "Login failed");
         }
     });
 

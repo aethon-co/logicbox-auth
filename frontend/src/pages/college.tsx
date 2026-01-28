@@ -2,12 +2,14 @@ import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { signupCollege } from '../api/college';
+import toast from 'react-hot-toast';
 
 export default function College() {
     const navigate = useNavigate();
     const [referralCode, setReferralCode] = useState<string | null>(null);
     const [copied, setCopied] = useState(false);
     const [emailError, setEmailError] = useState('');
+    const [phoneError, setPhoneError] = useState('');
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -21,10 +23,10 @@ export default function College() {
         mutationFn: signupCollege,
         onSuccess: (data) => {
             setReferralCode(data.user.referralCode);
-            navigate('/home');
+            toast.success("Account created successfully!");
         },
         onError: (error: any) => {
-            alert(`Signup Failed: ${error.message}`);
+            toast.error(error.message || "Signup failed");
         }
     });
 
@@ -32,6 +34,7 @@ export default function College() {
         if (referralCode) {
             navigator.clipboard.writeText(`${import.meta.env.VITE_FRONTEND}/register/${referralCode}`);
             setCopied(true);
+            toast.success("Link copied to clipboard");
             setTimeout(() => setCopied(false), 2000);
         }
     };
@@ -39,14 +42,24 @@ export default function College() {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
         if (e.target.name === 'email') setEmailError('');
+        if (e.target.name === 'phoneNumber') setPhoneError('');
     };
 
     const handleSubmit = () => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        // Improved Email Regex
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         if (!emailRegex.test(formData.email)) {
             setEmailError('Please enter a valid email address');
             return;
         }
+
+        // Phone Validation
+        const phoneRegex = /^\d{10}$/;
+        if (!phoneRegex.test(formData.phoneNumber)) {
+            setPhoneError('Phone number must be exactly 10 digits');
+            return;
+        }
+
         mutation.mutate(formData);
     };
 
@@ -195,14 +208,19 @@ export default function College() {
                             type="number"
                             placeholder="Grad. Year"
                         />
-                        <input
-                            style={styles.input as any}
-                            name="phoneNumber"
-                            value={formData.phoneNumber}
-                            onChange={handleChange}
-                            type="number"
-                            placeholder="Phone Number"
-                        />
+                        <div>
+                            <input
+                                style={{ ...styles.input, borderColor: phoneError ? '#ef4444' : '#334155' } as any}
+                                name="phoneNumber"
+                                value={formData.phoneNumber}
+                                onChange={handleChange}
+                                type="text"
+                                inputMode="numeric"
+                                placeholder="Phone Number"
+                                maxLength={10}
+                            />
+                            {phoneError && <span style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '4px', display: 'block' }}>{phoneError}</span>}
+                        </div>
                     </div>
                 </div>
 

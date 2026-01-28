@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const College = require("../models/college");
 const School = require("../models/school")
+const s3Service = require("../services/s3.service");
 
 const signup = async (req, res) => {
     try {
@@ -84,9 +85,44 @@ const deleteStudent = async (req, res) => {
         res.status(500).json({ message: "Error deleting student", error: error.message });
     }
 }
+
+
+
+const uploadVideo = async (req, res) => {
+    try {
+        const { studentId } = req.params;
+        const file = req.file; 
+
+        if (!file) {
+            return res.status(400).json({ message: "No file uploaded" });
+        }
+
+        const student = await School.findById(studentId);
+        if (!student) {
+            return res.status(404).json({ message: "Student not found" });
+        }
+
+        const { url, key } = await uploadVideoToS3(file);
+
+        student.videoUrl = url;
+        student.videoKey = key;
+        await student.save();
+
+        res.status(200).json({
+            message: "Video uploaded successfully",
+            url
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error uploading video", error: error.message });
+    }
+};
+
 module.exports = {
     signup,
     login,
     getCollegeById,
-    deleteStudent
+    deleteStudent,
+    uploadVideo
 };

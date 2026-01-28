@@ -3,6 +3,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { getMe } from "../api/me";
 import { deleteStudent } from "../api/delete";
+import { uploadVideo } from "../api/upload.ts";
 
 const Dashboard = () => {
     const navigate = useNavigate();
@@ -48,20 +49,35 @@ const Dashboard = () => {
         }
     };
 
-    const handleVideoUpload = (e: React.ChangeEvent<HTMLInputElement>, studentName: string) => {
+    const uploadMutation = useMutation({
+        mutationFn: uploadVideo,
+    }); 
+
+    const handleVideoUpload = async (
+        e: React.ChangeEvent<HTMLInputElement>,
+        studentId: string
+    ) => {
         const file = e.target.files?.[0];
         if (file) {
-            alert(`Uploading video for ${studentName}: ${file.name}`);
+            try {
+                await uploadMutation.mutateAsync({ studentId, file });
+                await queryClient.invalidateQueries({ queryKey: ["userMe"] });
+            } catch (error) {
+                console.error(error);
+            }
         }
     };
 
-    const mutation = useMutation({
+
+    const deletemutation = useMutation({
         mutationFn: deleteStudent,
+
     });
+
 
     const handleDeleteStudent = async (studentId: string) => {
         try {
-            await mutation.mutateAsync(studentId);
+            await deletemutation.mutateAsync(studentId);
             await queryClient.invalidateQueries({ queryKey: ["userMe"] });
         } catch (error) {
             console.error(error);
@@ -273,7 +289,7 @@ const Dashboard = () => {
                                         accept="video/*"
                                         id={`upload-mob-${student._id}`}
                                         style={{ display: "none" }}
-                                        onChange={(e) => handleVideoUpload(e, student.name)}
+                                        onChange={(e) => handleVideoUpload(e, student._id)}
                                     />
                                     <label htmlFor={`upload-mob-${student._id}`} style={{ ...styles.uploadLabel, flex: 1 }}>
                                         Upload Video

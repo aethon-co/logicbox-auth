@@ -4,6 +4,10 @@ import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { getMe } from "../api/me";
 import { deleteStudent } from "../api/delete";
 import logo from '../assets/lb_logo_4_dark_background.svg';
+import { uploadVideo } from "../api/upload.ts";
+import { deleteVideo } from "../api/video.ts";
+import VideoModal from "../components/VideoModal.tsx";
+import toast from "react-hot-toast";
 
 const Dashboard = () => {
     const navigate = useNavigate();
@@ -12,6 +16,9 @@ const Dashboard = () => {
 
     const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
     const [copied, setCopied] = useState(false);
+
+    const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+    const [currentVideoUrl, setCurrentVideoUrl] = useState<string | null>(null);
 
     useEffect(() => {
         const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -46,27 +53,70 @@ const Dashboard = () => {
             navigator.clipboard.writeText(fullLink);
             setCopied(true);
             setTimeout(() => setCopied(false), 2000);
+            toast.success("Referral link copied!");
         }
     };
 
-    const handleVideoUpload = (e: React.ChangeEvent<HTMLInputElement>, studentName: string) => {
+    const uploadMutation = useMutation({
+        mutationFn: uploadVideo,
+    });
+
+    const handleVideoUpload = async (
+        e: React.ChangeEvent<HTMLInputElement>,
+        studentId: string
+    ) => {
         const file = e.target.files?.[0];
         if (file) {
-            alert(`Uploading video for ${studentName}: ${file.name}`);
+            const toastId = toast.loading("Uploading video...");
+            try {
+                await uploadMutation.mutateAsync({ studentId, file });
+                await queryClient.invalidateQueries({ queryKey: ["userMe"] });
+                toast.success("Video uploaded successfully!", { id: toastId });
+            } catch (error) {
+                console.error(error);
+                toast.error("Failed to upload video.", { id: toastId });
+            }
         }
     };
 
-    const mutation = useMutation({
+
+    const deletemutation = useMutation({
         mutationFn: deleteStudent,
+
     });
+
 
     const handleDeleteStudent = async (studentId: string) => {
         try {
-            await mutation.mutateAsync(studentId);
+            await deletemutation.mutateAsync(studentId);
             await queryClient.invalidateQueries({ queryKey: ["userMe"] });
         } catch (error) {
             console.error(error);
         }
+    };
+
+    const handleDeleteVideo = async (studentId: string) => {
+        if (window.confirm("Are you sure you want to delete this video?")) {
+            const toastId = toast.loading("Deleting video...");
+            try {
+                await deleteVideo(studentId);
+                await queryClient.invalidateQueries({ queryKey: ["userMe"] });
+                toast.success("Video deleted successfully", { id: toastId });
+            } catch (error) {
+                console.error(error);
+                toast.error("Failed to delete video", { id: toastId });
+            }
+        }
+    };
+
+    const openVideoModal = (url: string) => {
+        setCurrentVideoUrl(url);
+        setIsVideoModalOpen(true);
+    };
+
+    const closeVideoModal = () => {
+        setIsVideoModalOpen(false);
+        setCurrentVideoUrl(null);
     };
 
     const styles = {
@@ -172,6 +222,19 @@ const Dashboard = () => {
             justifyContent: "center",
             border: "none"
         },
+        viewBtn: {
+            backgroundColor: "rgba(99, 102, 241, 0.1)",
+            color: "#6366f1",
+            padding: "10px 18px",
+            borderRadius: "10px",
+            cursor: "pointer",
+            fontSize: "0.85rem",
+            fontWeight: "600",
+            border: "1px solid rgba(99, 102, 241, 0.2)",
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+        },
         deleteBtn: {
             backgroundColor: "rgba(239, 68, 68, 0.1)",
             color: "#ef4444",
@@ -208,6 +271,11 @@ const Dashboard = () => {
 
     return (
         <div style={styles.container}>
+            <VideoModal
+                isOpen={isVideoModalOpen}
+                videoUrl={currentVideoUrl}
+                onClose={closeVideoModal}
+            />
             <div style={styles.nav}>
                 <div>
                     <img src={logo} alt="LogicBox" style={{ height: isMobile ? "32px" : "48px" }} />
@@ -269,21 +337,40 @@ const Dashboard = () => {
                                     <span style={styles.badge}>{student.standard}</span>
                                 </div>
                                 <div style={styles.actionGroup}>
-                                    <input
-                                        type="file"
-                                        accept="video/*"
-                                        id={`upload-mob-${student._id}`}
-                                        style={{ display: "none" }}
-                                        onChange={(e) => handleVideoUpload(e, student.name)}
-                                    />
-                                    <label htmlFor={`upload-mob-${student._id}`} style={{ ...styles.uploadLabel, flex: 1 }}>
-                                        Upload Video
-                                    </label>
+                                    {student.videoUrl ? (
+                                        <>
+                                            <button
+                                                onClick={() => openVideoModal(student.videoUrl)}
+                                                style={styles.viewBtn}
+                                            >
+                                                Play Video
+                                            </button>
+                                            <button
+                                                onClick={() => handleDeleteVideo(student._id)}
+                                                style={styles.deleteBtn}
+                                            >
+                                                Delete Video
+                                            </button>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <input
+                                                type="file"
+                                                accept="video/*"
+                                                id={`upload-mob-${student._id}`}
+                                                style={{ display: "none" }}
+                                                onChange={(e) => handleVideoUpload(e, student._id)}
+                                            />
+                                            <label htmlFor={`upload-mob-${student._id}`} style={{ ...styles.uploadLabel, flex: 1 }}>
+                                                Upload Video
+                                            </label>
+                                        </>
+                                    )}
                                     <button
                                         onClick={() => handleDeleteStudent(student._id)}
                                         style={styles.deleteBtn}
                                     >
-                                        Delete
+                                        Delete Student
                                     </button>
                                 </div>
                             </div>
@@ -307,16 +394,35 @@ const Dashboard = () => {
                                     <td style={styles.td}>{student.standard}</td>
                                     <td style={styles.td}>
                                         <div style={styles.actionGroup}>
-                                            <input
-                                                type="file"
-                                                accept="video/*"
-                                                id={`upload-${student._id}`}
-                                                style={{ display: "none" }}
-                                                onChange={(e) => handleVideoUpload(e, student.name)}
-                                            />
-                                            <label htmlFor={`upload-${student._id}`} style={styles.uploadLabel}>
-                                                Upload Video
-                                            </label>
+                                            {student.videoUrl ? (
+                                                <>
+                                                    <button
+                                                        onClick={() => openVideoModal(student.videoUrl)}
+                                                        style={styles.viewBtn}
+                                                    >
+                                                        Play Video
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleDeleteVideo(student._id)}
+                                                        style={styles.deleteBtn}
+                                                    >
+                                                        Delete Video
+                                                    </button>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <input
+                                                        type="file"
+                                                        accept="video/*"
+                                                        id={`upload-${student._id}`}
+                                                        style={{ display: "none" }}
+                                                        onChange={(e) => handleVideoUpload(e, student._id)}
+                                                    />
+                                                    <label htmlFor={`upload-${student._id}`} style={styles.uploadLabel}>
+                                                        Upload Video
+                                                    </label>
+                                                </>
+                                            )}
                                             <button
                                                 onClick={() => handleDeleteStudent(student._id)}
                                                 style={styles.deleteBtn}

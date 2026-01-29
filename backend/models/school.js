@@ -52,6 +52,14 @@ const schoolSchema = new mongoose.Schema({
     isEnabled: {
         type: Boolean,
         default: true
+    },
+    videoUrl: {
+        type: String,
+        default: null
+    },
+    videoKey: {
+        type: String,
+        default: null
     }
 })
 

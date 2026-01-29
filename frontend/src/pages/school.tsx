@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 import { signupSchool } from '../api/school';
+import logo from '../assets/lb_logo_4_dark_background.svg';
 
 export default function School() {
     const navigate = useNavigate();
@@ -147,6 +148,9 @@ export default function School() {
     return (
         <div style={styles.wrapper as any}>
             <div style={styles.card as any}>
+                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '24px' }}>
+                    <img src={logo} alt="LogicBox Logo" style={{ height: '40px' }} />
+                </div>
                 <h1 style={styles.title as any}>Student Registration</h1>
                 <p style={styles.subtitle as any}>Enter details to join the program</p>
 
@@ -201,6 +205,7 @@ export default function School() {
                             value={formData.referralCode}
                             onChange={handleChange}
                             placeholder="Referral Code"
+                            disabled
                         />
                     </div>
 

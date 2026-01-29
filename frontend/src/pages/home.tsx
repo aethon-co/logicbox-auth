@@ -3,6 +3,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { getMe } from "../api/me";
 import { deleteStudent } from "../api/delete";
+import logo from '../assets/lb_logo_4_dark_background.svg';
 
 const Dashboard = () => {
     const navigate = useNavigate();
@@ -209,7 +210,7 @@ const Dashboard = () => {
         <div style={styles.container}>
             <div style={styles.nav}>
                 <div>
-                    <h1 style={{ margin: 0, fontSize: isMobile ? "1.8rem" : "2.5rem", letterSpacing: "-0.02em" }}>Overview</h1>
+                    <img src={logo} alt="LogicBox" style={{ height: isMobile ? "32px" : "48px" }} />
                     <p style={{ color: "#64748b", marginTop: "4px", fontSize: "0.9rem" }}>Manage your referrals and uploads</p>
                 </div>
                 {!isMobile && (

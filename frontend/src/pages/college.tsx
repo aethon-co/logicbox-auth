@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { signupCollege } from '../api/college';
+import logo from '../assets/lb_logo_4_dark_background.svg';
 
 export default function College() {
     const navigate = useNavigate();
@@ -149,6 +150,9 @@ export default function College() {
     return (
         <div style={styles.wrapper as any}>
             <div style={styles.card as any}>
+                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '24px' }}>
+                    <img src={logo} alt="LogicBox Logo" style={{ height: '40px' }} />
+                </div>
                 <h1 style={styles.title as any}>College Registration</h1>
                 <p style={styles.subtitle as any}>Partner with us to empower your students</p>
 

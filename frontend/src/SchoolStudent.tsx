@@ -1,6 +1,11 @@
+import logo from './assets/logicbox.svg';
+
 const SchoolStudent = () => {
     return (
         <>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+                <img src={logo} alt="LogicBox Logo" style={{ height: '50px' }} />
+            </div>
             <h1>School Student</h1>
             <input type="text" placeholder="Enter your name" />
             <input type="text" placeholder="Enter your school name" />

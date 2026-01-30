@@ -70,28 +70,28 @@ export default function College() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: '#020617',
+            backgroundColor: '#fff7ed', // Orange-50
             padding: '20px',
             fontFamily: "'Plus Jakarta Sans', sans-serif"
         },
         card: {
             width: '100%',
             maxWidth: '500px',
-            backgroundColor: '#0f172a',
+            backgroundColor: '#ffffff',
             padding: '40px',
             borderRadius: '24px',
-            border: '1px solid #1e293b',
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
+            border: '1px solid #fed7aa', // Orange-200
+            boxShadow: '0 25px 50px -12px rgba(249, 115, 22, 0.15)' // Orange shadow
         },
         title: {
-            color: '#f8fafc',
+            color: '#1e293b', // Slate-800
             fontSize: '1.875rem',
             fontWeight: '700',
             textAlign: 'center',
             marginBottom: '8px'
         },
         subtitle: {
-            color: '#94a3b8',
+            color: '#64748b', // Slate-500
             textAlign: 'center',
             marginBottom: '32px',
             fontSize: '0.95rem'
@@ -104,19 +104,19 @@ export default function College() {
         },
         input: {
             width: '100%',
-            backgroundColor: '#1e293b',
-            border: '1px solid #334155',
+            backgroundColor: '#ffffff',
+            border: '1px solid #cbd5e1', // Slate-300
             borderRadius: '12px',
             padding: '14px 16px',
-            color: '#f8fafc',
+            color: '#1e293b',
             fontSize: '1rem',
             outline: 'none',
             boxSizing: 'border-box',
-            transition: 'border-color 0.2s'
+            transition: 'all 0.2s'
         },
         buttonPrimary: {
             width: '100%',
-            backgroundColor: '#6366f1',
+            backgroundColor: '#f97316', // Orange-500
             color: 'white',
             padding: '14px',
             borderRadius: '12px',
@@ -125,19 +125,20 @@ export default function College() {
             border: 'none',
             cursor: 'pointer',
             marginBottom: '12px',
-            transition: 'opacity 0.2s'
+            transition: 'all 0.2s'
         },
         footerText: {
             textAlign: 'center',
-            color: '#94a3b8',
+            color: '#64748b',
             fontSize: '0.9rem',
             marginTop: '20px'
         },
         link: {
-            color: '#6366f1',
+            color: '#f97316', // Orange-500
             cursor: 'pointer',
             fontWeight: '600',
-            marginLeft: '5px'
+            marginLeft: '5px',
+            transition: 'color 0.2s'
         },
         successBox: {
             marginTop: '24px',
@@ -148,12 +149,12 @@ export default function College() {
             textAlign: 'center'
         },
         copyArea: {
-            backgroundColor: '#020617',
+            backgroundColor: '#fff7ed', // Orange-50
             padding: '12px',
             borderRadius: '10px',
             marginTop: '12px',
             cursor: 'pointer',
-            border: '1px solid #334155',
+            border: '1px solid #fed7aa', // Orange-200
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center'
@@ -164,7 +165,7 @@ export default function College() {
         <div style={styles.wrapper as any}>
             <div style={styles.card as any}>
                 <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '24px' }}>
-                    <img src={logo} alt="LogicBox Logo" style={{ height: '40px' }} />
+                    <a href="https://www.logicbox.ac/"><img src={logo} alt="LogicBox Logo" style={{ height: '40px' }} /></a>
                 </div>
                 <h1 style={styles.title as any}>College Registration</h1>
                 <p style={styles.subtitle as any}>Partner with us to empower your students</p>
@@ -179,7 +180,7 @@ export default function College() {
                     />
                     <div>
                         <input
-                            style={{ ...styles.input, borderColor: emailError ? '#ef4444' : '#334155' } as any}
+                            style={{ ...styles.input, borderColor: emailError ? '#ef4444' : '#cbd5e1' } as any}
                             name="email"
                             value={formData.email}
                             onChange={handleChange}
@@ -214,7 +215,7 @@ export default function College() {
                         />
                         <div>
                             <input
-                                style={{ ...styles.input, borderColor: phoneError ? '#ef4444' : '#334155' } as any}
+                                style={{ ...styles.input, borderColor: phoneError ? '#ef4444' : '#cbd5e1' } as any}
                                 name="phoneNumber"
                                 value={formData.phoneNumber}
                                 onChange={handleChange}

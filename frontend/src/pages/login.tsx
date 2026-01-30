@@ -3,6 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { loginCollege } from '../api/login';
 import toast from 'react-hot-toast';
+import logo from '../assets/lb_logo_4_dark_background.svg';
 
 export default function Login() {
     const navigate = useNavigate();
@@ -45,28 +46,28 @@ export default function Login() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: '#020617',
+            backgroundColor: '#fff7ed', // Orange-50
             padding: '20px',
             fontFamily: "'Plus Jakarta Sans', sans-serif"
         },
         card: {
             width: '100%',
             maxWidth: '450px',
-            backgroundColor: '#0f172a',
+            backgroundColor: '#ffffff',
             padding: '40px',
             borderRadius: '24px',
-            border: '1px solid #1e293b',
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
+            border: '1px solid #fed7aa', // Orange-200
+            boxShadow: '0 25px 50px -12px rgba(249, 115, 22, 0.15)' // Orange shadow
         },
         title: {
-            color: '#f8fafc',
+            color: '#1e293b', // Slate-800
             fontSize: '1.875rem',
             fontWeight: '700',
             textAlign: 'center',
             marginBottom: '8px'
         },
         subtitle: {
-            color: '#94a3b8',
+            color: '#64748b', // Slate-500
             textAlign: 'center',
             marginBottom: '32px',
             fontSize: '0.95rem'
@@ -79,11 +80,11 @@ export default function Login() {
         },
         input: {
             width: '100%',
-            backgroundColor: '#1e293b',
-            border: '1px solid #334155',
+            backgroundColor: '#ffffff',
+            border: '1px solid #cbd5e1', // Slate-300
             borderRadius: '12px',
             padding: '14px 16px',
-            color: '#f8fafc',
+            color: '#1e293b',
             fontSize: '1rem',
             outline: 'none',
             boxSizing: 'border-box',
@@ -91,7 +92,7 @@ export default function Login() {
         },
         buttonPrimary: {
             width: '100%',
-            backgroundColor: '#6366f1',
+            backgroundColor: '#f97316', // Orange-500
             color: 'white',
             padding: '14px',
             borderRadius: '12px',
@@ -103,12 +104,12 @@ export default function Login() {
         },
         footerText: {
             textAlign: 'center',
-            color: '#94a3b8',
+            color: '#64748b',
             fontSize: '0.9rem',
             marginTop: '20px'
         },
         link: {
-            color: '#6366f1',
+            color: '#f97316', // Orange-500
             cursor: 'pointer',
             fontWeight: '600',
             marginLeft: '5px',
@@ -119,6 +120,9 @@ export default function Login() {
     return (
         <div style={styles.wrapper as any}>
             <div style={styles.card as any}>
+                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '24px' }}>
+                    <a href="https://www.logicbox.ac/"><img src={logo} alt="LogicBox Logo" style={{ height: '40px' }} /></a>
+                </div>
                 <h1 style={styles.title as any}>Welcome Back</h1>
                 <p style={styles.subtitle as any}>Enter your credentials to access your account</p>
 
@@ -127,15 +131,15 @@ export default function Login() {
                         <input
                             style={{
                                 ...styles.input,
-                                borderColor: emailError ? '#ef4444' : '#334155'
+                                borderColor: emailError ? '#ef4444' : '#cbd5e1'
                             } as any}
                             name="email"
                             value={formData.email}
                             onChange={handleChange}
                             type="email"
                             placeholder="Email Address"
-                            onFocus={(e) => !emailError && (e.currentTarget.style.borderColor = '#6366f1')}
-                            onBlur={(e) => !emailError && (e.currentTarget.style.borderColor = '#334155')}
+                            onFocus={(e) => !emailError && (e.currentTarget.style.borderColor = '#f97316')}
+                            onBlur={(e) => !emailError && (e.currentTarget.style.borderColor = '#cbd5e1')}
                         />
                         {emailError && (
                             <span style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '4px', display: 'block' }}>
@@ -151,8 +155,8 @@ export default function Login() {
                         onChange={handleChange}
                         type="password"
                         placeholder="Password"
-                        onFocus={(e) => (e.currentTarget.style.borderColor = '#6366f1')}
-                        onBlur={(e) => (e.currentTarget.style.borderColor = '#334155')}
+                        onFocus={(e) => (e.currentTarget.style.borderColor = '#f97316')}
+                        onBlur={(e) => (e.currentTarget.style.borderColor = '#cbd5e1')}
                     />
                 </div>
 
@@ -163,8 +167,8 @@ export default function Login() {
                     } as any}
                     onClick={handleSubmit}
                     disabled={mutation.isPending}
-                    onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#4f46e5')}
-                    onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#6366f1')}
+                    onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#ea580c')}
+                    onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#f97316')}
                 >
                     {mutation.isPending ? "Signing in..." : "Login"}
                 </button>
@@ -174,8 +178,8 @@ export default function Login() {
                     <span
                         style={styles.link as any}
                         onClick={() => navigate("/")}
-                        onMouseOver={(e) => (e.currentTarget.style.color = '#818cf8')}
-                        onMouseOut={(e) => (e.currentTarget.style.color = '#6366f1')}
+                        onMouseOver={(e) => (e.currentTarget.style.color = '#ea580c')}
+                        onMouseOut={(e) => (e.currentTarget.style.color = '#f97316')}
                     >
                         Register
                     </span>

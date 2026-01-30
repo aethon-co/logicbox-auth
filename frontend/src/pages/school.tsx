@@ -58,28 +58,28 @@ export default function School() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: '#020617',
+            backgroundColor: '#fff7ed', // Orange-50
             padding: '40px 20px',
             fontFamily: "'Plus Jakarta Sans', sans-serif"
         },
         card: {
             width: '100%',
             maxWidth: '600px',
-            backgroundColor: '#0f172a',
+            backgroundColor: '#ffffff',
             padding: isMobile ? '30px 20px' : '40px',
             borderRadius: '24px',
-            border: '1px solid #1e293b',
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
+            border: '1px solid #fed7aa', // Orange-200
+            boxShadow: '0 25px 50px -12px rgba(249, 115, 22, 0.15)'
         },
         title: {
-            color: '#f8fafc',
+            color: '#1e293b', // Slate-800
             fontSize: '1.875rem',
             fontWeight: '700',
             textAlign: 'center',
             marginBottom: '8px'
         },
         subtitle: {
-            color: '#94a3b8',
+            color: '#64748b', // Slate-500
             textAlign: 'center',
             marginBottom: '32px',
             fontSize: '0.95rem'
@@ -97,19 +97,19 @@ export default function School() {
         },
         input: {
             width: '100%',
-            backgroundColor: '#1e293b',
-            border: '1px solid #334155',
+            backgroundColor: '#ffffff',
+            border: '1px solid #cbd5e1', // Slate-300
             borderRadius: '12px',
             padding: '14px 16px',
-            color: '#f8fafc',
+            color: '#1e293b',
             fontSize: '1rem',
             outline: 'none',
             boxSizing: 'border-box',
-            transition: 'border-color 0.2s'
+            transition: 'all 0.2s'
         },
         buttonPrimary: {
             width: '100%',
-            backgroundColor: '#6366f1',
+            backgroundColor: '#f97316', // Orange-500
             color: 'white',
             padding: '14px',
             borderRadius: '12px',
@@ -118,30 +118,32 @@ export default function School() {
             border: 'none',
             cursor: 'pointer',
             marginBottom: '12px',
-            transition: 'opacity 0.2s'
+            transition: 'all 0.2s'
         },
         buttonSecondary: {
             width: '100%',
             backgroundColor: 'transparent',
-            color: '#94a3b8',
+            color: '#64748b', // Slate-500
             padding: '12px',
             borderRadius: '12px',
             fontWeight: '500',
             fontSize: '0.9rem',
-            border: '1px solid #334155',
+            border: '1px solid #cbd5e1', // Slate-300
             cursor: 'pointer',
-            marginBottom: '20px'
+            marginBottom: '20px',
+            transition: 'all 0.2s'
         },
         footerText: {
             textAlign: 'center',
-            color: '#94a3b8',
+            color: '#64748b',
             fontSize: '0.9rem'
         },
         link: {
-            color: '#6366f1',
+            color: '#f97316', // Orange-500
             cursor: 'pointer',
             fontWeight: '600',
-            marginLeft: '5px'
+            marginLeft: '5px',
+            transition: 'color 0.2s'
         }
     };
 
@@ -149,7 +151,7 @@ export default function School() {
         <div style={styles.wrapper as any}>
             <div style={styles.card as any}>
                 <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '24px' }}>
-                    <img src={logo} alt="LogicBox Logo" style={{ height: '40px' }} />
+                    <a href="https://www.logicbox.ac/"><img src={logo} alt="LogicBox Logo" style={{ height: '40px' }} /></a>
                 </div>
                 <h1 style={styles.title as any}>Student Registration</h1>
                 <p style={styles.subtitle as any}>Enter details to join the program</p>

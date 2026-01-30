@@ -122,10 +122,10 @@ const Dashboard = () => {
     const styles = {
         container: {
             padding: isMobile ? "20px 16px 120px 16px" : "40px 60px",
-            backgroundColor: "#020617",
+            backgroundColor: "#fff7ed", // Orange-50
             minHeight: "100vh",
             fontFamily: "'Plus Jakarta Sans', sans-serif",
-            color: "#f8fafc"
+            color: "#1e293b" // Slate-800
         },
         nav: {
             display: "flex",
@@ -135,8 +135,8 @@ const Dashboard = () => {
             marginBottom: isMobile ? "24px" : "40px"
         },
         referralCard: {
-            background: "rgba(99, 102, 241, 0.1)",
-            border: "1px solid rgba(99, 102, 241, 0.2)",
+            background: "#ffffff",
+            border: "1px solid #fed7aa", // Orange-200
             borderRadius: "16px",
             padding: "16px 20px",
             display: "flex",
@@ -144,7 +144,8 @@ const Dashboard = () => {
             alignItems: "center",
             marginBottom: "32px",
             cursor: "pointer",
-            transition: "all 0.2s"
+            transition: "all 0.2s",
+            boxShadow: "0 4px 6px -1px rgba(249, 115, 22, 0.1)"
         },
         logoutBtn: {
             padding: "12px 24px",
@@ -160,7 +161,7 @@ const Dashboard = () => {
             bottom: isMobile ? "20px" : "auto",
             left: isMobile ? "16px" : "auto",
             zIndex: 10,
-            boxShadow: isMobile ? "0 -4px 20px rgba(0,0,0,0.5)" : "none"
+            boxShadow: isMobile ? "0 -4px 20px rgba(0,0,0,0.1)" : "none"
         },
         statsContainer: {
             display: "grid",
@@ -169,37 +170,39 @@ const Dashboard = () => {
             marginBottom: "40px"
         },
         card: {
-            background: "linear-gradient(145deg, #1e293b, #0f172a)",
+            background: "#ffffff",
             padding: isMobile ? "24px" : "32px",
             borderRadius: "24px",
-            border: "1px solid #334155",
-            boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.2)"
+            border: "1px solid #fed7aa", // Orange-200
+            boxShadow: "0 10px 15px -3px rgba(249, 115, 22, 0.05)"
         },
         tableWrapper: {
-            background: "#0f172a",
+            background: "#ffffff",
             borderRadius: "24px",
-            border: "1px solid #1e293b",
+            border: "1px solid #fed7aa", // Orange-200
             overflow: "hidden",
-            boxShadow: "0 10px 15px -3px rgba(0,0,0,0.5)"
+            boxShadow: "0 10px 15px -3px rgba(249, 115, 22, 0.05)"
         },
         table: { width: "100%", borderCollapse: "separate" as const, borderSpacing: "0" },
         th: {
             textAlign: "left" as const,
             padding: "16px 24px",
-            backgroundColor: "#1e293b",
-            color: "#94a3b8",
+            backgroundColor: "#fff7ed", // Orange-50
+            color: "#64748b", // Slate-500
             fontSize: "0.7rem",
             textTransform: "uppercase" as const,
-            letterSpacing: "0.1em"
+            letterSpacing: "0.1em",
+            borderBottom: "1px solid #fed7aa"
         },
         td: {
             padding: "16px 24px",
-            borderBottom: "1px solid #1e293b",
-            fontSize: "0.95rem"
+            borderBottom: "1px solid #f1f5f9", // Slate-100
+            fontSize: "0.95rem",
+            color: "#1e293b"
         },
         mobileRow: {
             padding: "20px",
-            borderBottom: "1px solid #1e293b",
+            borderBottom: "1px solid #f1f5f9",
             display: "flex",
             flexDirection: "column" as const,
             gap: "12px"
@@ -210,7 +213,7 @@ const Dashboard = () => {
             gap: "12px"
         },
         uploadLabel: {
-            backgroundColor: "#6366f1",
+            backgroundColor: "#f97316", // Orange-500
             color: "white",
             padding: "10px 18px",
             borderRadius: "10px",
@@ -220,48 +223,50 @@ const Dashboard = () => {
             display: "inline-flex",
             alignItems: "center",
             justifyContent: "center",
-            border: "none"
+            border: "none",
+            transition: "all 0.2s"
         },
         viewBtn: {
-            backgroundColor: "rgba(99, 102, 241, 0.1)",
-            color: "#6366f1",
+            backgroundColor: "#fff7ed", // Orange-50
+            color: "#f97316", // Orange-500
             padding: "10px 18px",
             borderRadius: "10px",
             cursor: "pointer",
             fontSize: "0.85rem",
             fontWeight: "600",
-            border: "1px solid rgba(99, 102, 241, 0.2)",
+            border: "1px solid #fed7aa", // Orange-200
             display: "inline-flex",
             alignItems: "center",
             justifyContent: "center",
+            transition: "all 0.2s"
         },
         deleteBtn: {
-            backgroundColor: "rgba(239, 68, 68, 0.1)",
+            backgroundColor: "#fef2f2", // Red-50
             color: "#ef4444",
             padding: "10px 18px",
             borderRadius: "10px",
             cursor: "pointer",
-            border: "1px solid rgba(239, 68, 68, 0.2)",
+            border: "1px solid #fecaca", // Red-200
             fontSize: "0.85rem",
             fontWeight: "600",
             transition: "all 0.2s"
         },
         badge: {
-            backgroundColor: "rgba(56, 189, 248, 0.1)",
-            color: "#38bdf8",
+            backgroundColor: "#e0f2fe", // Sky-100
+            color: "#0284c7", // Sky-600
             padding: "4px 10px",
             borderRadius: "6px",
             fontSize: "0.75rem",
             fontWeight: "600",
-            border: "1px solid rgba(56, 189, 248, 0.2)"
+            border: "1px solid #bae6fd" // Sky-200
         },
         loader: {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
             height: "100vh",
-            backgroundColor: "#020617",
-            color: "#6366f1",
+            backgroundColor: "#fff7ed",
+            color: "#f97316",
             fontSize: "1.2rem"
         }
     };
@@ -278,7 +283,7 @@ const Dashboard = () => {
             />
             <div style={styles.nav}>
                 <div>
-                    <img src={logo} alt="LogicBox" style={{ height: isMobile ? "32px" : "48px" }} />
+                    <a href="https://www.logicbox.ac/"><img src={logo} alt="LogicBox" style={{ height: isMobile ? "32px" : "48px" }} /></a>
                     <p style={{ color: "#64748b", marginTop: "4px", fontSize: "0.9rem" }}>Manage your referrals and uploads</p>
                 </div>
                 {!isMobile && (
@@ -291,16 +296,16 @@ const Dashboard = () => {
             <div
                 style={styles.referralCard as any}
                 onClick={handleCopyLink}
-                onMouseOver={(e) => (e.currentTarget.style.borderColor = "rgba(99, 102, 241, 0.5)")}
-                onMouseOut={(e) => (e.currentTarget.style.borderColor = "rgba(99, 102, 241, 0.2)")}
+                onMouseOver={(e) => (e.currentTarget.style.borderColor = "#f97316")}
+                onMouseOut={(e) => (e.currentTarget.style.borderColor = "#fed7aa")}
             >
                 <div>
-                    <p style={{ margin: 0, fontSize: "0.75rem", color: "#6366f1", fontWeight: 700, textTransform: "uppercase" }}>Your Referral Link</p>
-                    <p style={{ margin: "4px 0 0 0", fontSize: isMobile ? "0.85rem" : "1rem", color: "#f8fafc", opacity: 0.8 }}>
+                    <p style={{ margin: 0, fontSize: "0.75rem", color: "#f97316", fontWeight: 700, textTransform: "uppercase" }}>Your Referral Link</p>
+                    <p style={{ margin: "4px 0 0 0", fontSize: isMobile ? "0.85rem" : "1rem", color: "#334155", opacity: 0.8 }}>
                         {window.location.origin}/school/{collegeUser?.referralCode}
                     </p>
                 </div>
-                <div style={{ backgroundColor: copied ? "#10b981" : "#6366f1", color: "white", padding: "8px 16px", borderRadius: "8px", fontSize: "0.8rem", fontWeight: 600 }}>
+                <div style={{ backgroundColor: copied ? "#10b981" : "#f97316", color: "white", padding: "8px 16px", borderRadius: "8px", fontSize: "0.8rem", fontWeight: 600 }}>
                     {copied ? "Copied!" : "Copy"}
                 </div>
             </div>
@@ -308,21 +313,21 @@ const Dashboard = () => {
             <div style={styles.statsContainer}>
                 <div style={styles.card}>
                     <p style={{ color: "#64748b", margin: "0 0 8px 0", fontSize: "0.75rem", fontWeight: "600" }}>REPRESENTATIVE</p>
-                    <h2 style={{ margin: 0, fontSize: "1.4rem" }}>{collegeUser?.name}</h2>
+                    <h2 style={{ margin: 0, fontSize: "1.4rem", color: "#1e293b" }}>{collegeUser?.name}</h2>
                 </div>
                 <div style={styles.card}>
                     <p style={{ color: "#64748b", margin: "0 0 8px 0", fontSize: "0.75rem", fontWeight: "600" }}>INSTITUTION</p>
-                    <h2 style={{ margin: 0, fontSize: "1.4rem", color: "#6366f1" }}>{collegeUser?.collegeName}</h2>
+                    <h2 style={{ margin: 0, fontSize: "1.4rem", color: "#f97316" }}>{collegeUser?.collegeName}</h2>
                 </div>
                 <div style={styles.card}>
                     <p style={{ color: "#64748b", margin: "0 0 8px 0", fontSize: "0.75rem", fontWeight: "600" }}>TOTAL REFERRALS</p>
-                    <h2 style={{ margin: 0, fontSize: "1.4rem" }}>{enabledReferrals.length}</h2>
+                    <h2 style={{ margin: 0, fontSize: "1.4rem", color: "#1e293b" }}>{enabledReferrals.length}</h2>
                 </div>
             </div>
 
             <div style={styles.tableWrapper}>
-                <div style={{ padding: "20px 24px", borderBottom: "1px solid #1e293b" }}>
-                    <h3 style={{ margin: 0, fontSize: "1rem" }}>Enrolled Students</h3>
+                <div style={{ padding: "20px 24px", borderBottom: "1px solid #f1f5f9" }}>
+                    <h3 style={{ margin: 0, fontSize: "1rem", color: "#1e293b" }}>Enrolled Students</h3>
                 </div>
 
                 {isMobile ? (
@@ -331,8 +336,8 @@ const Dashboard = () => {
                             <div key={student._id} style={styles.mobileRow}>
                                 <div style={{ display: "flex", justifyContent: "space-between" }}>
                                     <div>
-                                        <div style={{ fontWeight: "600", color: "#f1f5f9" }}>{student.name}</div>
-                                        <div style={{ color: "#94a3b8", fontSize: "0.85rem" }}>{student.schoolName}</div>
+                                        <div style={{ fontWeight: "600", color: "#1e293b" }}>{student.name}</div>
+                                        <div style={{ color: "#64748b", fontSize: "0.85rem" }}>{student.schoolName}</div>
                                     </div>
                                     <span style={styles.badge}>{student.standard}</span>
                                 </div>

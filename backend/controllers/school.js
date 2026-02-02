@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const School = require("../models/school");
+const College = require("../models/college"); // Import College model
 
 const signup = async (req, res) => {
     try {
@@ -27,6 +28,14 @@ const signup = async (req, res) => {
         });
 
         await newSchool.save();
+
+        // Increment referral count if referral code is present and valid
+        if (referralCode && referralCode !== 'DIRECT') {
+            await College.findOneAndUpdate(
+                { referralCode: referralCode },
+                { $inc: { referralCount: 1 } }
+            );
+        }
 
         const token = jwt.sign({ id: newSchool._id, role: "school" }, process.env.JWT_SECRET || "default_secret_key", { expiresIn: "1h" });
 

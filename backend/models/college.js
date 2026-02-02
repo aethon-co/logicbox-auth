@@ -35,6 +35,10 @@ const collegeSchema = new mongoose.Schema({
         type: String,
         required: true,
         minlength: 3
+    },
+    referralCount: {
+        type: Number,
+        default: 0
     }
 })
 

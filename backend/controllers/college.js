@@ -89,7 +89,11 @@ const getCollegeById = async (req, res) => {
             return studentObj;
         }));
 
-        res.status(200).json({ collegeUser, referrals: referralsWithSignedUrls });
+        // Calculate Rank
+        const higherRankedUsersCount = await College.countDocuments({ referralCount: { $gt: collegeUser.referralCount || 0 } });
+        const rank = higherRankedUsersCount + 1;
+
+        res.status(200).json({ collegeUser: { ...collegeUser.toObject(), rank }, referrals: referralsWithSignedUrls });
     } catch (error) {
         res.status(500).json({ message: "Error fetching user", error: error.message });
     }
@@ -114,7 +118,7 @@ const deleteStudent = async (req, res) => {
 const uploadVideo = async (req, res) => {
     try {
         const { id: studentId } = req.params;
-        const file = req.file; 
+        const file = req.file;
 
         if (!file) {
             return res.status(400).json({ message: "No file uploaded" });
@@ -131,11 +135,11 @@ const uploadVideo = async (req, res) => {
         const url = await s3Service.getVideoUrl(key);
 
         student.videoUrl = url; // Note: This saves a signed URL which expires. Ideally, we verified schema saves Key. 
-                                // Saving signed URL to DB is not ideal if it expires. 
-                                // Better: Save Key to DB (already doing via videoKey). 
-                                // But frontend currently relies on videoUrl. 
-                                // Since we sign URLs on fetch (getCollegeById), this saved videoUrl might be stale later.
-                                // However, for immediate response, it works.
+        // Saving signed URL to DB is not ideal if it expires. 
+        // Better: Save Key to DB (already doing via videoKey). 
+        // But frontend currently relies on videoUrl. 
+        // Since we sign URLs on fetch (getCollegeById), this saved videoUrl might be stale later.
+        // However, for immediate response, it works.
         student.videoKey = key;
         await student.save();
 
@@ -174,11 +178,25 @@ const deleteVideo = async (req, res) => {
     }
 };
 
+const getLeaderboard = async (req, res) => {
+    try {
+        const leaderboard = await College.find({})
+            .sort({ referralCount: -1 })
+            .select("name collegeName referralCount -_id"); // Select only necessary fields
+
+        res.status(200).json(leaderboard);
+    } catch (error) {
+        console.error("Error fetching leaderboard:", error);
+        res.status(500).json({ message: "Error fetching leaderboard", error: error.message });
+    }
+};
+
 module.exports = {
     signup,
     login,
     getCollegeById,
     deleteStudent,
     uploadVideo,
-    deleteVideo
+    deleteVideo,
+    getLeaderboard
 };

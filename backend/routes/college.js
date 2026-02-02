@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { signup, login, getCollegeById, deleteStudent, uploadVideo, deleteVideo } = require("../controllers/college");
+const { signup, login, getCollegeById, deleteStudent, uploadVideo, deleteVideo, getLeaderboard } = require("../controllers/college");
 
 const multer = require("multer");
 const storage = multer.memoryStorage();
@@ -12,5 +12,6 @@ router.get("/:id", getCollegeById);
 router.post("/:id/upload", upload.single("file"), uploadVideo);
 router.post("/:id/video/delete", deleteVideo);
 router.post("/:id", deleteStudent);
+router.get("/leaderboard", getLeaderboard);
 
 module.exports = router;

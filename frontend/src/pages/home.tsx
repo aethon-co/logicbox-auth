@@ -321,7 +321,23 @@ const Dashboard = () => {
                 </div>
                 <div style={styles.card}>
                     <p style={{ color: "#64748b", margin: "0 0 8px 0", fontSize: "0.75rem", fontWeight: "600" }}>TOTAL REFERRALS</p>
-                    <h2 style={{ margin: 0, fontSize: "1.4rem", color: "#1e293b" }}>{enabledReferrals.length}</h2>
+                    <h2 style={{ margin: 0, fontSize: "1.4rem", color: "#1e293b" }}>{collegeUser?.referralCount || 0}</h2>
+                </div>
+                <div
+                    style={{ ...styles.card, cursor: 'pointer', transition: 'transform 0.2s' } as any}
+                    onClick={() => navigate('/leaderboard')}
+                    onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
+                    onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div>
+                            <p style={{ color: "#64748b", margin: "0 0 8px 0", fontSize: "0.75rem", fontWeight: "600", display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                YOUR RANK <span style={{ fontSize: '0.9rem' }}>🏆</span>
+                            </p>
+                            <h2 style={{ margin: 0, fontSize: "1.4rem", color: "#f97316" }}>#{collegeUser?.rank || '-'}</h2>
+                        </div>
+                        <div style={{ color: "#f97316", opacity: 0.5 }}>➜</div>
+                    </div>
                 </div>
             </div>
 

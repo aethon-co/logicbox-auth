@@ -8,6 +8,7 @@ import School from './pages/school.tsx'
 import College from './pages/college.tsx'
 import Login from './pages/login.tsx'
 import Home from './pages/home.tsx'
+import Leaderboard from './pages/leaderboard.tsx'
 const queryClient = new QueryClient()
 
 const router = createBrowserRouter([
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
   {
     path: "/home",
     element: <Home />,
+  },
+  {
+    path: "/leaderboard",
+    element: <Leaderboard />,
   }
 ])
 

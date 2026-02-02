@@ -7,8 +7,6 @@ import logo from '../assets/lb_logo_4_dark_background.svg';
 
 export default function College() {
     const navigate = useNavigate();
-    const [referralCode, setReferralCode] = useState<string | null>(null);
-    const [copied, setCopied] = useState(false);
     const [emailError, setEmailError] = useState('');
     const [phoneError, setPhoneError] = useState('');
     const [formData, setFormData] = useState({
@@ -23,22 +21,15 @@ export default function College() {
     const mutation = useMutation({
         mutationFn: signupCollege,
         onSuccess: (data) => {
-            setReferralCode(data.user.referralCode);
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("user", JSON.stringify(data.user));
             toast.success("Account created successfully!");
+            navigate("/home");
         },
         onError: (error: any) => {
             toast.error(error.message || "Signup failed");
         }
     });
-
-    const handleCopy = () => {
-        if (referralCode) {
-            navigator.clipboard.writeText(`${import.meta.env.VITE_FRONTEND}/register/${referralCode}`);
-            setCopied(true);
-            toast.success("Link copied to clipboard");
-            setTimeout(() => setCopied(false), 2000);
-        }
-    };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -139,25 +130,6 @@ export default function College() {
             fontWeight: '600',
             marginLeft: '5px',
             transition: 'color 0.2s'
-        },
-        successBox: {
-            marginTop: '24px',
-            padding: '20px',
-            backgroundColor: 'rgba(16, 185, 129, 0.1)',
-            border: '1px solid rgba(16, 185, 129, 0.2)',
-            borderRadius: '16px',
-            textAlign: 'center'
-        },
-        copyArea: {
-            backgroundColor: '#fff7ed', // Orange-50
-            padding: '12px',
-            borderRadius: '10px',
-            marginTop: '12px',
-            cursor: 'pointer',
-            border: '1px solid #fed7aa', // Orange-200
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center'
         }
     };
 
@@ -246,17 +218,8 @@ export default function College() {
                     Registering for a school?
                     <span style={styles.link as any} onClick={() => navigate("/school")}>Click here</span>
                 </div>
-
-                {referralCode && (
-                    <div style={styles.successBox as any}>
-                        <h4 style={{ color: '#10b981', margin: '0 0 8px 0', fontSize: '1rem' }}>Success! Account Created</h4>
-                        <div style={styles.copyArea as any} onClick={handleCopy}>
-                            <span style={{ fontSize: '0.85rem', color: '#6366f1' }}>{referralCode}</span>
-                            <span>{copied ? '✅' : '📋'}</span>
-                        </div>
-                    </div>
-                )}
             </div>
         </div>
     );
+
 }

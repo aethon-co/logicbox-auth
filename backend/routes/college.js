@@ -8,10 +8,10 @@ const upload = multer({ storage: storage });
 
 router.post("/signup", signup);
 router.post("/login", login);
+router.get("/leaderboard", getLeaderboard);
 router.get("/:id", getCollegeById);
 router.post("/:id/upload", upload.single("file"), uploadVideo);
 router.post("/:id/video/delete", deleteVideo);
 router.post("/:id", deleteStudent);
-router.get("/leaderboard", getLeaderboard);
 
 module.exports = router;

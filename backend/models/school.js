@@ -51,6 +51,10 @@ const schoolSchema = new mongoose.Schema({
         required: false,
         default: "No Feedback Yet"
     },
+    referralCount: {
+        type: Number,
+        default: 0
+    },
     isEnabled: {
         type: Boolean,
         default: true

@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
+
 import { signupSchool } from '../api/school';
+import toast from 'react-hot-toast';
 import logo from '../assets/lb_logo_4_dark_background.svg';
 
 export default function School() {
@@ -36,11 +38,11 @@ export default function School() {
     const mutation = useMutation({
         mutationFn: signupSchool,
         onSuccess: () => {
-            alert("Signup Successful!");
-            navigate("/login");
+            toast.success("Signup Successful!");
+            // navigate("/login");
         },
         onError: (error: any) => {
-            alert(`Signup Failed: ${error.message}`);
+            toast.error(`Signup Failed: ${error.message}`);
         }
     });
 
@@ -243,10 +245,7 @@ export default function School() {
                     Register as College Representative
                 </button>
 
-                <div style={styles.footerText as any}>
-                    Already have an account?
-                    <span style={styles.link as any} onClick={() => navigate("/login")}>Login</span>
-                </div>
+
             </div>
         </div>
     );

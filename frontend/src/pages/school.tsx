@@ -51,7 +51,11 @@ export default function School() {
     };
 
     const handleSubmit = () => {
-        mutation.mutate(formData);
+        const payload = { ...formData };
+        if (!payload.feedbackDetails) {
+            delete (payload as any).feedbackDetails;
+        }
+        mutation.mutate(payload);
     };
 
     const styles = {

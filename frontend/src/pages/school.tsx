@@ -12,6 +12,14 @@ export default function School() {
 
     const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
 
+    const [nameError, setNameError] = useState('');
+    const [schoolNameError, setSchoolNameError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+    const [phoneError, setPhoneError] = useState('');
+    const [standardError, setStandardError] = useState('');
+    const [addressError, setAddressError] = useState('');
+    const [feedbackError, setFeedbackError] = useState('');
+
     const [formData, setFormData] = useState({
         name: '',
         schoolName: '',
@@ -46,11 +54,58 @@ export default function School() {
         }
     });
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
+        if (e.target.name === 'name') setNameError('');
+        if (e.target.name === 'schoolName') setSchoolNameError('');
+        if (e.target.name === 'password') setPasswordError('');
+        if (e.target.name === 'phoneNumber') setPhoneError('');
+        if (e.target.name === 'standard') setStandardError('');
+        if (e.target.name === 'address') setAddressError('');
+        if (e.target.name === 'feedbackDetails') setFeedbackError('');
     };
 
     const handleSubmit = () => {
+        let isValid = true;
+
+        if (formData.name.length < 3) {
+            setNameError('Name must be at least 3 characters');
+            isValid = false;
+        }
+
+        if (formData.schoolName.length < 3) {
+            setSchoolNameError('School Name must be at least 3 characters');
+            isValid = false;
+        }
+
+        if (formData.password.length < 6) {
+            setPasswordError('Password must be at least 6 characters');
+            isValid = false;
+        }
+
+        const phoneRegex = /^\d{10}$/;
+        if (!phoneRegex.test(formData.phoneNumber)) {
+            setPhoneError('Phone must be 10 digits');
+            isValid = false;
+        }
+
+        if (!formData.standard) {
+            setStandardError('Please select a grade');
+            isValid = false;
+        }
+
+        if (formData.address.length < 3) {
+            setAddressError('Address must be at least 3 characters');
+            isValid = false;
+        }
+
+        if (formData.feedbackDetails && formData.feedbackDetails.length < 3) {
+            setFeedbackError('Feedback must be at least 3 characters');
+            isValid = false;
+        }
+
+        if (!isValid) return;
+
         const payload = { ...formData };
         if (!payload.feedbackDetails) {
             delete (payload as any).feedbackDetails;
@@ -164,49 +219,75 @@ export default function School() {
 
                 <div style={styles.formContainer as any}>
                     <div style={styles.gridRow as any}>
-                        <input
-                            style={styles.input as any}
-                            name="name"
-                            value={formData.name}
-                            onChange={handleChange}
-                            placeholder="Full Name"
-                        />
-                        <input
-                            style={styles.input as any}
-                            name="schoolName"
-                            value={formData.schoolName}
-                            onChange={handleChange}
-                            placeholder="School Name"
-                        />
+                        <div>
+                            <input
+                                style={{ ...styles.input, borderColor: nameError ? '#ef4444' : '#cbd5e1' } as any}
+                                name="name"
+                                value={formData.name}
+                                onChange={handleChange}
+                                placeholder="Full Name"
+                            />
+                            {nameError && <span style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '4px', display: 'block' }}>{nameError}</span>}
+                        </div>
+                        <div>
+                            <input
+                                style={{ ...styles.input, borderColor: schoolNameError ? '#ef4444' : '#cbd5e1' } as any}
+                                name="schoolName"
+                                value={formData.schoolName}
+                                onChange={handleChange}
+                                placeholder="School Name"
+                            />
+                            {schoolNameError && <span style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '4px', display: 'block' }}>{schoolNameError}</span>}
+                        </div>
                     </div>
 
                     <div style={styles.gridRow as any}>
-                        <input
-                            style={styles.input as any}
-                            name="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            type="password"
-                            placeholder="Create Password"
-                        />
-                        <input
-                            style={styles.input as any}
-                            name="phoneNumber"
-                            value={formData.phoneNumber}
-                            onChange={handleChange}
-                            type="number"
-                            placeholder="Parent Phone"
-                        />
+                        <div>
+                            <input
+                                style={{ ...styles.input, borderColor: passwordError ? '#ef4444' : '#cbd5e1' } as any}
+                                name="password"
+                                value={formData.password}
+                                onChange={handleChange}
+                                type="password"
+                                placeholder="Create Password"
+                            />
+                            {passwordError && <span style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '4px', display: 'block' }}>{passwordError}</span>}
+                        </div>
+                        <div>
+                            <input
+                                style={{ ...styles.input, borderColor: phoneError ? '#ef4444' : '#cbd5e1' } as any}
+                                name="phoneNumber"
+                                value={formData.phoneNumber}
+                                onChange={handleChange}
+                                type="number"
+                                placeholder="Parent Phone"
+                            />
+                            {phoneError && <span style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '4px', display: 'block' }}>{phoneError}</span>}
+                        </div>
                     </div>
 
                     <div style={styles.gridRow as any}>
-                        <input
-                            style={styles.input as any}
-                            name="standard"
-                            value={formData.standard}
-                            onChange={handleChange}
-                            placeholder="Grade"
-                        />
+                        <div>
+                            <select
+                                style={{
+                                    ...styles.input,
+                                    borderColor: standardError ? '#ef4444' : '#cbd5e1',
+                                    appearance: 'none',
+                                    cursor: 'pointer'
+                                } as any}
+                                name="standard"
+                                value={formData.standard}
+                                onChange={handleChange as any}
+                            >
+                                <option value="" disabled>Select Grade</option>
+                                <option value="LKG">LKG</option>
+                                <option value="UKG">UKG</option>
+                                {[...Array(12)].map((_, i) => (
+                                    <option key={i + 1} value={String(i + 1)}>{i + 1}</option>
+                                ))}
+                            </select>
+                            {standardError && <span style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '4px', display: 'block' }}>{standardError}</span>}
+                        </div>
                         <input
                             style={styles.input as any}
                             name="referralCode"
@@ -217,21 +298,27 @@ export default function School() {
                         />
                     </div>
 
-                    <input
-                        style={styles.input as any}
-                        name="address"
-                        value={formData.address}
-                        onChange={handleChange}
-                        placeholder="Full Address"
-                    />
+                    <div>
+                        <input
+                            style={{ ...styles.input, borderColor: addressError ? '#ef4444' : '#cbd5e1' } as any}
+                            name="address"
+                            value={formData.address}
+                            onChange={handleChange}
+                            placeholder="Full Address"
+                        />
+                        {addressError && <span style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '4px', display: 'block' }}>{addressError}</span>}
+                    </div>
 
-                    <input
-                        style={styles.input as any}
-                        name="feedbackDetails"
-                        value={formData.feedbackDetails}
-                        onChange={handleChange}
-                        placeholder="Additional Details (Optional)"
-                    />
+                    <div>
+                        <input
+                            style={{ ...styles.input, borderColor: feedbackError ? '#ef4444' : '#cbd5e1' } as any}
+                            name="feedbackDetails"
+                            value={formData.feedbackDetails}
+                            onChange={handleChange}
+                            placeholder="Additional Details (Optional)"
+                        />
+                        {feedbackError && <span style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '4px', display: 'block' }}>{feedbackError}</span>}
+                    </div>
                 </div>
 
                 <button

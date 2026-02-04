@@ -9,9 +9,19 @@ import College from './pages/college.tsx'
 import Login from './pages/login.tsx'
 import Home from './pages/home.tsx'
 import Leaderboard from './pages/leaderboard.tsx'
+import AdminSignup from './pages/AdminSignup.tsx'
+import AdminLogin from './pages/AdminLogin.tsx'
 const queryClient = new QueryClient()
 
 const router = createBrowserRouter([
+  {
+    path: "/admin/signup",
+    element: <AdminSignup />,
+  },
+  {
+    path: "/admin/login",
+    element: <AdminLogin />,
+  },
   {
     path: "/school/:referralCode?",
     element: <School />,

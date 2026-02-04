@@ -7,8 +7,13 @@ import logo from '../assets/lb_logo_4_dark_background.svg';
 
 export default function College() {
     const navigate = useNavigate();
+    const [nameError, setNameError] = useState('');
     const [emailError, setEmailError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+    const [collegeNameError, setCollegeNameError] = useState('');
+    const [gradYearError, setGradYearError] = useState('');
     const [phoneError, setPhoneError] = useState('');
+
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -31,26 +36,58 @@ export default function College() {
         }
     });
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
         if (e.target.name === 'email') setEmailError('');
         if (e.target.name === 'phoneNumber') setPhoneError('');
+        if (e.target.name === 'name') setNameError('');
+        if (e.target.name === 'password') setPasswordError('');
+        if (e.target.name === 'collegeName') setCollegeNameError('');
+        if (e.target.name === 'yearOfGraduation') setGradYearError('');
     };
 
     const handleSubmit = () => {
-        // Improved Email Regex
+        let isValid = true;
+
+        // Name Validation
+        if (formData.name.length < 3) {
+            setNameError('Name must be at least 3 characters');
+            isValid = false;
+        }
+
+        // Email Regex
         const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         if (!emailRegex.test(formData.email)) {
             setEmailError('Please enter a valid email address');
-            return;
+            isValid = false;
+        }
+
+        // Password Validation
+        if (formData.password.length < 6) {
+            setPasswordError('Password must be at least 6 characters');
+            isValid = false;
+        }
+
+        // College Name Validation
+        if (formData.collegeName.length < 3) {
+            setCollegeNameError('College Name must be at least 3 characters');
+            isValid = false;
+        }
+
+        // Graduation Year Validation
+        if (!formData.yearOfGraduation) {
+            setGradYearError('Please select a graduation year');
+            isValid = false;
         }
 
         // Phone Validation
         const phoneRegex = /^\d{10}$/;
         if (!phoneRegex.test(formData.phoneNumber)) {
             setPhoneError('Phone number must be exactly 10 digits');
-            return;
+            isValid = false;
         }
+
+        if (!isValid) return;
 
         mutation.mutate(formData);
     };
@@ -143,13 +180,16 @@ export default function College() {
                 <p style={styles.subtitle as any}>Partner with us to empower your students</p>
 
                 <div style={styles.inputGroup as any}>
-                    <input
-                        style={styles.input as any}
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        placeholder="Full Name"
-                    />
+                    <div>
+                        <input
+                            style={{ ...styles.input, borderColor: nameError ? '#ef4444' : '#cbd5e1' } as any}
+                            name="name"
+                            value={formData.name}
+                            onChange={handleChange}
+                            placeholder="Full Name"
+                        />
+                        {nameError && <span style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '4px', display: 'block' }}>{nameError}</span>}
+                    </div>
                     <div>
                         <input
                             style={{ ...styles.input, borderColor: emailError ? '#ef4444' : '#cbd5e1' } as any}
@@ -161,30 +201,48 @@ export default function College() {
                         />
                         {emailError && <span style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '4px', display: 'block' }}>{emailError}</span>}
                     </div>
-                    <input
-                        style={styles.input as any}
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        type="password"
-                        placeholder="Create Password"
-                    />
-                    <input
-                        style={styles.input as any}
-                        name="collegeName"
-                        value={formData.collegeName}
-                        onChange={handleChange}
-                        placeholder="College Name"
-                    />
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                    <div>
                         <input
-                            style={styles.input as any}
-                            name="yearOfGraduation"
-                            value={formData.yearOfGraduation}
+                            style={{ ...styles.input, borderColor: passwordError ? '#ef4444' : '#cbd5e1' } as any}
+                            name="password"
+                            value={formData.password}
                             onChange={handleChange}
-                            type="number"
-                            placeholder="Grad. Year"
+                            type="password"
+                            placeholder="Create Password"
                         />
+                        {passwordError && <span style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '4px', display: 'block' }}>{passwordError}</span>}
+                    </div>
+                    <div>
+                        <input
+                            style={{ ...styles.input, borderColor: collegeNameError ? '#ef4444' : '#cbd5e1' } as any}
+                            name="collegeName"
+                            value={formData.collegeName}
+                            onChange={handleChange}
+                            placeholder="College Name"
+                        />
+                        {collegeNameError && <span style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '4px', display: 'block' }}>{collegeNameError}</span>}
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                        <div>
+                            <select
+                                style={{
+                                    ...styles.input,
+                                    borderColor: gradYearError ? '#ef4444' : '#cbd5e1',
+                                    appearance: 'none',
+                                    cursor: 'pointer'
+                                } as any}
+                                name="yearOfGraduation"
+                                value={formData.yearOfGraduation}
+                                onChange={handleChange as any}
+                            >
+                                <option value="" disabled>Select Year</option>
+                                <option value="2026">2026</option>
+                                <option value="2027">2027</option>
+                                <option value="2028">2028</option>
+                                <option value="2029">2029</option>
+                            </select>
+                            {gradYearError && <span style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '4px', display: 'block' }}>{gradYearError}</span>}
+                        </div>
                         <div>
                             <input
                                 style={{ ...styles.input, borderColor: phoneError ? '#ef4444' : '#cbd5e1' } as any}

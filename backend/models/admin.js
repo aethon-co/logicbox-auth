@@ -11,10 +11,11 @@ const adminSchema = new mongoose.Schema({
         required: true,
         minlength: 6
     },
-    email: {
+    username: {
         type: String,
         required: true,
-        minlength: 3
+        minlength: 3,
+        unique: true
     }
 })
 
